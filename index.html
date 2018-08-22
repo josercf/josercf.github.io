@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=email], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h3>Contact Form</h3>
+
+<div class="container">
+    <label for="fname">E-mail</label>
+    <input type="email" id="fname" name="email" placeholder="Seu e-mail..">
+    <button>Solicitar convite</button>
+	
+	<p id="msg"></p>
+</div>
+
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.post("https://slack.com/api/users.admin.invite?token=xoxp-421775944103-422078749318-422079302550-d26575636aaade4bc80558e141ae0028&email="+$("#fname").val(),
+        function(data,status){
+           // alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+			
+			if(data.ok === true){
+				$("#msg").text("Convite enviado, verifique seu e-mail!");
+				$("#msg").css({color:"green"});				
+			}
+			
+			if(data.error === "already_invited"){
+				$("#msg").text("Já enviamos seu convite, verifique seu e-mail");
+				$("#msg").css({color:"red"});				
+			}
+        });
+    });
+});
+</script>
+
+</body>
+</html>
