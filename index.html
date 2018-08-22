@@ -53,7 +53,8 @@ button:hover {
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-        $.post("https://slack.com/api/users.admin.invite?token=xoxp-421775944103-422078749318-421013267189-0003b633a7d452c9075e86b9e0cbddda&email="+$("#fname").val(),
+	    var token = "xoxp-421775944103-422078749318-421014048405-0e253b5501da5573b7a96c5da7e7f37d";
+        $.post("https://slack.com/api/users.admin.invite?token="+token+"&email="+$("#fname").val(),
         function(data,status){
            // alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
 			
