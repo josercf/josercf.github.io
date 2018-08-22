@@ -61,11 +61,47 @@ $(document).ready(function(){
 			if(data.ok === true){
 				$("#msg").text("Convite enviado, verifique seu e-mail!");
 				$("#msg").css({color:"green"});				
-			}
-			
-			if(data.error === "already_invited"){
-				$("#msg").text("Já enviamos seu convite, verifique seu e-mail");
-				$("#msg").css({color:"red"});				
+			}else{
+				var error = "";
+				
+				if(data.error ==="already_invited"){
+					error = "Já enviamos seu convite, verifique seu e-mail";
+				   }
+				if(data.error ==="already_in_team"){
+					error = "Você já faz parte do time";
+				   }
+				if(data.error ==="channel_not_found"){
+					error = "O canal não foi encontrado";
+				   }
+				if(data.error ==="sent_recently"){
+					error = "O convite foi enviado recentemente";
+				   }
+				if(data.error ==="user_disabled"){
+					error = "A conta de usuário está desabilitada";
+				   }
+				if(data.error ==="missing_scope"){
+				if(data.error ==="Escopo de autorização ausente"){
+					error = "";
+				   }
+				if(data.error ==="not_allowed"){
+					error = "Operação não permitida";
+				   }
+				if(data.error ==="not_allowed_token_type"){
+					error = "Token inválido";
+				   }
+				if(data.error ==="requires_one_channel"){
+					error = "É necessário informar um canal";
+				   }
+				if(data.error ==="not_authed"){
+					error = "Não autorizado";
+				   }
+					
+				if(error === ""){
+					error = "Ops!, Ocorreu um problema ao enviar seu convite. Detalhes: "+data.error;
+				}
+				
+				$("#msg").text(error);
+				$("#msg").css({color:"red"});	
 			}
         });
     });
