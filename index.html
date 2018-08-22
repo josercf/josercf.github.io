@@ -53,7 +53,7 @@ button:hover {
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-	    var token = "xoxp-421775944103-422078749318-421195210037-3a97bf168f6ff4061b8f7b17f8a54725";
+	    var token = "xoxp-421775944103-422078749318-420887910420-9ab2cac3f621a94d511e5105fd4527ad";
         $.post("https://slack.com/api/users.admin.invite?token="+token+"&email="+$("#fname").val(),
         function(data,status){
           if(data.ok === true){
