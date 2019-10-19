@@ -262,8 +262,9 @@
                     let lipMakeup = data[i].faceAttributes.makeup.lipMakeup ? "sim" : "não";
                     let facialHair = data[i].faceAttributes.makeup.lipMakeup ? "sim" : "não";
 
-                    let moustache = data[i].faceAttributes.facialHair.moustache >= 0.1 ? "sim" : "não";
-                    let beard = data[i].faceAttributes.facialHair.beard >= 0.1 ? "sim" : "não";
+                  
+                    let moustache = data[i].faceAttributes.facialHair.moustache > 0.1 ? "sim" : "não";
+                    let beard = data[i].faceAttributes.facialHair.beard > 0.1 ? "sim" : "não";
 
                     $('<div class="tag"/>').attr({
                         top: data[i].faceRectangle.top,
