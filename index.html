@@ -1,110 +1,368 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" xmlns:fb="http://ogp.me/ns/fb#">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-* {box-sizing: border-box;}
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>Camera and Video Control with HTML5 Example</title>
+    <meta name="description"
+        content="Access the desktop camera and video using HTML, JavaScript, and Canvas.  The camera may be controlled using HTML5 and getUserMedia." />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js></script><![endif]-->
+    <style>
+        body {
+            background-color: #EBE8E4;
+            color: #222;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-weight: 300;
+            font-size: 15px;
+        }
 
-input[type=email], select, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    resize: vertical;
-}
+        nav {
+            background-color: #fff;
+            border: 1px solid #dedede;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+            color: #888;
+            display: block;
+            margin: 8px 22px 8px 22px;
+            overflow: hidden;
+            width: 90%;
+        }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        video {
+            border: 1px solid #ccc;
+            display: block;
+            margin: 0 0 20px 0;
+            float: left;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        #msg {
+            float: left;
+        }
 
-.container {
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    padding: 20px;
-}
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        #paused {
+            height: 250px;
+            margin: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        #canvas {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        #result {
+            margin-left: 20px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            width: 540px;
+            height: 480px;
+        }
+
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 40%;
+            float: left;
+            margin-left: 2.5em;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+
+        .tag {
+            position: relative;
+            background-color: transparent;
+            border: 1px solid tomato;
+            z-index: 999999;
+        }
+
+        #footer{
+            display: inline;
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
+
 <body>
 
-<h3>Contact Form</h3>
+    <div class="demo-wrapper">
 
-<div class="container">
-    <label for="fname">E-mail</label>
-    <input type="email" id="fname" name="email" placeholder="Seu e-mail..">
-    <button>Solicitar convite</button>
-	
-	<p id="msg"></p>
-</div>
+        <h1>Universidade LaSalle - Detecção de emoções</h1>
 
-<script>
-$(document).ready(function(){
-    $("button").click(function(){
-	    var token = "xoxp-421775944103-422078749318-420887910420-9ab2cac3f621a94d511e5105fd4527ad";
-        $.post("https://slack.com/api/users.admin.invite?token="+token+"&email="+$("#fname").val(),
-        function(data,status){
-          if(data.ok === true){
-				$("#msg").text("Convite enviado, verifique seu e-mail!");
-				$("#msg").css({color:"green"});				
-			}else{
-				var error = "";
-				
-				if(data.error ==="already_invited"){
-					error = "Já enviamos seu convite, verifique seu e-mail";
-				   }
-				if(data.error ==="already_in_team"){
-					error = "Você já faz parte do time";
-				   }
-				if(data.error ==="channel_not_found"){
-					error = "O canal não foi encontrado";
-				   }
-				if(data.error ==="sent_recently"){
-					error = "O convite foi enviado recentemente";
-				   }
-				if(data.error ==="user_disabled"){
-					error = "A conta de usuário está desabilitada";
-				   }
-				if(data.error ==="missing_scope"){
-                    			error = "escopo ausente";
-				   }
-                   
-				if(data.error ==="not_allowed"){
-					error = "Operação não permitida";
-				   }
-				if(data.error ==="not_allowed_token_type"){
-					error = "Token inválido";
-				   }
-				if(data.error ==="requires_one_channel"){
-					error = "É necessário informar um canal";
-				   }
-				if(data.error ==="not_authed"){
-					error = "Não autorizado";
-				   }
-					
-				if(error === ""){
-					error = "Ops!, Ocorreu um problema ao enviar seu convite. Detalhes: "+data.error;
-				}
-				
-				$("#msg").text(error);
-				$("#msg").css({color:"red"});	
-			}
-        });
-    });
-});
-</script>
+        <!--
+		Ideally these elements aren't created until it's confirmed that the
+		client supports video/camera, but for the sake of illustrating the
+		elements involved, they are created with markup (not JavaScript)
+	-->
+        <video id="video" width="640" height="480" autoplay></video>
 
+        <div id="result">
+        </div>
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <!-- <button id="snap" class="sexyButton">Snap Photo</button> -->
+
+        <div id="footer">
+            <p id="msg">Tempo para a próxima análise <span id="time"></span></p>
+            <button id="pause">Pausar</button>
+        </div>
+
+        <script>
+
+            var interval = 10;
+            var pause = false;
+
+            // Put event listeners into place
+            window.addEventListener("DOMContentLoaded", function () {
+                // Grab elements, create settings, etc.
+                var canvas = document.getElementById('canvas');
+                var context = canvas.getContext('2d');
+                var video = document.getElementById('video');
+                var mediaConfig = { video: true };
+                var errBack = function (e) {
+                    console.log('An error has occurred!', e)
+                };
+
+                $("#pause").click(function () {
+                    $("#result").html('');
+
+                    $("<p id='paused'>Inteligência artificial pausada. Pressione o botão \"iniciar\" para começar a análise de emoções</p>")
+                        .appendTo("#result");
+                    pause = !pause;
+                });
+
+                // Put video listeners into place
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia(mediaConfig).then(function (stream) {
+                        //video.src = window.URL.createObjectURL(stream);
+                        video.srcObject = stream;
+                        video.play();
+                    });
+                }
+                /* Legacy code below! */
+                else if (navigator.getUserMedia) { // Standard
+                    navigator.getUserMedia(mediaConfig, function (stream) {
+                        video.src = stream;
+                        video.play();
+                    }, errBack);
+                } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+                    navigator.webkitGetUserMedia(mediaConfig, function (stream) {
+                        video.src = window.webkitURL.createObjectURL(stream);
+                        video.play();
+                    }, errBack);
+                } else if (navigator.mozGetUserMedia) { // Mozilla-prefixed
+                    navigator.mozGetUserMedia(mediaConfig, function (stream) {
+                        video.src = window.URL.createObjectURL(stream);
+                        video.play();
+                    }, errBack);
+                }
+
+
+                setInterval(function () {
+
+                    if (pause) {
+                        return;
+                    }
+                    $("#time").text(interval);
+
+                    interval--;
+
+                    if (interval === 0) {
+                        interval = 10;
+                    }
+
+                }, 1000);
+
+                setInterval(function () {
+
+                    if (pause) {
+                        return;
+                    }
+
+                    $("#result").html('');
+                    $("#result").text('aguarde...');
+                    context.drawImage(video, 0, 0, 640, 480);
+
+                    let data = canvas.toDataURL('image/jpeg');
+
+                    fetch(data)
+                        .then(res => res.blob())
+                        .then(blobData => {
+                            $.post({
+                                url: "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise",
+                                contentType: "application/octet-stream",
+                                headers: {
+                                    'Ocp-Apim-Subscription-Key': '33463e5484e24ca39134f1130ef0a179'
+                                },
+                                processData: false,
+                                data: blobData
+                            })
+                                .done(function (data) {
+                                    $("#result").html('');
+                                    mapResults(data);
+                                })
+                                .fail(function (err) {
+                                    $("#result").text(JSON.stringify(err));
+                                })
+
+                        })
+                }, 10000);
+
+                // Trigger photo take
+                //     document.getElementById('snap').addEventListener('click', function () {
+                //         context.drawImage(video, 0, 0, 640, 480);
+
+                //         let data = canvas.toDataURL('image/jpeg');
+
+                //         fetch(data)
+                //             .then(res => res.blob())
+                //             .then(blobData => {
+                //                 $.post({
+                //                     url: "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise",
+                //                     contentType: "application/octet-stream",
+                //                     headers: {
+                //                         'Ocp-Apim-Subscription-Key': '33463e5484e24ca39134f1130ef0a179'
+                //                     },
+                //                     processData: false,
+                //                     data: blobData
+                //                 })
+                //                     .done(function (data) {
+                //                         mapResults(data);
+                //                     })
+                //                     .fail(function (err) {
+                //                         $("#result").text(JSON.stringify(err));
+                //                     })
+                //             });
+
+                //     });
+            }, false);
+
+            function mapResults(data) {
+
+                let cards = '';
+                for (var i = 0; i < data.length; ++i) {
+
+                    let age = data[i].faceAttributes.age;
+                    let emoction = getEmotion(data[i].faceAttributes.emotion);
+                    let glasses = data[i].faceAttributes.glasses == "ReadingGlasses" ? "sim" : "não";
+                    let accessories = getAccessories(data[i].faceAttributes.accessories);
+
+                    let makeup = data[i].faceAttributes.makeup.eyeMakeup ? "sim" : "não";
+                    let lipMakeup = data[i].faceAttributes.makeup.lipMakeup ? "sim" : "não";
+                    let facialHair = data[i].faceAttributes.makeup.lipMakeup ? "sim" : "não";
+
+                    let moustache = data[i].faceAttributes.facialHair.moustache > 0.5 ? "sim" : "não";
+                    let beard = data[i].faceAttributes.facialHair.beard > 0.5 ? "sim" : "não";
+
+                    $('<div class="tag"/>').attr({
+                        top: data[i].faceRectangle.top,
+                        left: data[i].faceRectangle.top,
+                        width: data[i].faceRectangle.width,
+                        height: data[i].faceRectangle.height,
+                    }).appendTo('#video');
+
+                    cards +=
+                        '<div class="card">' +
+                        '<img src="' + emoction.toLowerCase() + '.png" alt="Avatar" style="width:100%">' +
+                        '<div class="container">' +
+                        '<h4><b>' + emoction + '</b></h4>' +
+                        '<p>Idade: &nbsp;' + age + '</p>' +
+                        '<p>Acessórios: &nbsp;' + accessories + '</p>' +
+                        '<p>Óculos? &nbsp;' + glasses + '</p>';
+
+                    if (data[i].faceAttributes.gender === "female") {
+                        cards += '<p>Batom? &nbsp;' + lipMakeup + '</p>';
+                        cards += '<p>Sombra? &nbsp;' + makeup + '</p>';
+
+                    } else {
+                        cards += '<p>Bigode? &nbsp;' + moustache + '</p>';
+                        cards += '<p>Barba? &nbsp;' + beard + '</p>';
+                    }
+
+                    cards +=
+                        '</div>' +
+                        '</div>';
+                }
+
+                $('#result').html(cards);
+            }
+
+            function getAccessories(accessories) {
+                let accessoryArray = [];
+
+                for (var i = 0; i < accessories.length; ++i) {
+                    switch (accessories[i].type) {
+                        case "headwear":
+                            accessoryArray[i] = "chapéu";
+                            break;
+                        case "glasses":
+                            accessoryArray[i] = "óculos";
+                            break;
+                        case "mask":
+                            accessoryArray[i] = "máscara";
+                            break;
+                        default:
+                            accessoryArray[i] = accessories[i].type;
+                            break;
+                    }
+                }
+
+                return accessoryArray.join()
+            }
+
+            function getEmotion(emotion) {
+                var emotionType = "";
+                var emotionValue = 0.0;
+                if (emotion.anger > emotionValue) {
+                    emotionValue = emotion.anger;
+                    emotionType = "Raiva";// "Anger";
+                }
+                if (emotion.contempt > emotionValue) {
+                    emotionValue = emotion.contempt;
+                    emotionType = "Desprezo";// "Contempt";
+                }
+                if (emotion.disgust > emotionValue) {
+                    emotionValue = emotion.disgust;
+                    emotionType = "Desgosto";// "Disgust";
+                }
+                if (emotion.fear > emotionValue) {
+                    emotionValue = emotion.fear;
+                    emotionType = "Medo";// "Fear";
+                }
+                if (emotion.happiness > emotionValue) {
+                    emotionValue = emotion.happiness;
+                    emotionType = "Felicidade";// "Happiness";
+                }
+                if (emotion.neutral > emotionValue) {
+                    emotionValue = emotion.neutral;
+                    emotionType = "Neutro";// "Neutral";
+                }
+                if (emotion.sadness > emotionValue) {
+                    emotionValue = emotion.sadness;
+                    emotionType = "Tristeza";// "Sadness";
+                }
+                if (emotion.surprise > emotionValue) {
+                    emotionValue = emotion.surprise;
+                    emotionType = "Surpresa";// "Surprise";
+                }
+                return emotionType;
+            }
+
+        </script>
+
+    </div>
+    </main>
 </body>
+
 </html>

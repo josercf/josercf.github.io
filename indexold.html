@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=email], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h3>Contact Form</h3>
+
+<div class="container">
+    <label for="fname">E-mail</label>
+    <input type="email" id="fname" name="email" placeholder="Seu e-mail..">
+    <button>Solicitar convite</button>
+	
+	<p id="msg"></p>
+</div>
+
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+	    var token = "xoxp-421775944103-422078749318-420887910420-9ab2cac3f621a94d511e5105fd4527ad";
+        $.post("https://slack.com/api/users.admin.invite?token="+token+"&email="+$("#fname").val(),
+        function(data,status){
+          if(data.ok === true){
+				$("#msg").text("Convite enviado, verifique seu e-mail!");
+				$("#msg").css({color:"green"});				
+			}else{
+				var error = "";
+				
+				if(data.error ==="already_invited"){
+					error = "Já enviamos seu convite, verifique seu e-mail";
+				   }
+				if(data.error ==="already_in_team"){
+					error = "Você já faz parte do time";
+				   }
+				if(data.error ==="channel_not_found"){
+					error = "O canal não foi encontrado";
+				   }
+				if(data.error ==="sent_recently"){
+					error = "O convite foi enviado recentemente";
+				   }
+				if(data.error ==="user_disabled"){
+					error = "A conta de usuário está desabilitada";
+				   }
+				if(data.error ==="missing_scope"){
+                    			error = "escopo ausente";
+				   }
+                   
+				if(data.error ==="not_allowed"){
+					error = "Operação não permitida";
+				   }
+				if(data.error ==="not_allowed_token_type"){
+					error = "Token inválido";
+				   }
+				if(data.error ==="requires_one_channel"){
+					error = "É necessário informar um canal";
+				   }
+				if(data.error ==="not_authed"){
+					error = "Não autorizado";
+				   }
+					
+				if(error === ""){
+					error = "Ops!, Ocorreu um problema ao enviar seu convite. Detalhes: "+data.error;
+				}
+				
+				$("#msg").text(error);
+				$("#msg").css({color:"red"});	
+			}
+        });
+    });
+});
+</script>
+
+</body>
+</html>
