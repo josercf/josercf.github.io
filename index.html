@@ -61,7 +61,7 @@
             border: 1px solid #ccc;
             display: inline-block;
             width: 540px;
-            height: 1024px;
+            height: 940px;
         }
 
         .card {
@@ -106,11 +106,11 @@
 		client supports video/camera, but for the sake of illustrating the
 		elements involved, they are created with markup (not JavaScript)
 	-->
-        <video id="video" width="960" height="1024" autoplay></video>
+        <video id="video" width="1024" height="940" autoplay></video>
 
         <div id="result">
         </div>
-        <canvas id="canvas" width="640" height="480"></canvas>
+        <canvas id="canvas" width="1024" height="940"></canvas>
         <!-- <button id="snap" class="sexyButton">Snap Photo</button> -->
 
         <div id="footer">
@@ -192,7 +192,7 @@
 
                     $("#result").html('');
                     $("#result").text('aguarde...');
-                    context.drawImage(video, 0, 0, 640, 480);
+                    context.drawImage(video, 0, 0, 1024, 940);
 
                     let data = canvas.toDataURL('image/jpeg');
 
